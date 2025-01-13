@@ -3,10 +3,6 @@ Simple URP Toon Shader for BasisVR
 
 Do-To List:
 
-Add Normal Map
-
-Add Emission Map
-
 Add Glitter Effect (I need glitter!!)
 
 ![image](https://github.com/user-attachments/assets/bcd22d65-19ea-429d-8274-a9f399338ad7)
