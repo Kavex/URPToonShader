@@ -2,10 +2,17 @@ Shader "URPToon/URPToonShader"
 {
     Properties
     {
+        [NoScaleOffset]_Albedo("Albedo", 2D) = "white" {}
+        _Color("Color", Color) = (1, 1, 1, 0)
         _Lighting_cutoff("Lighting cutoff", Range(-1, 1)) = 0
         _Shadow_Intensity("Shadow Intensity", Range(0, 1)) = 0.5
-        [NoScaleOffset]_Main_Texture("Main Texture", 2D) = "white" {}
-        _Color("Color", Color) = (1, 1, 1, 0)
+        [NoScaleOffset]_Emission("Emission", 2D) = "white" {}
+        _Emission_Color("Emission Color", Color) = (0, 0, 0, 0)
+        [Normal][NoScaleOffset]_Normal("Normal", 2D) = "bump" {}
+        [NoScaleOffset]_Specular("Specular", 2D) = "white" {}
+        _Metallic("Metallic", Range(0, 1)) = 0
+        _Smoothness("Smoothness", Range(0, 1)) = 0
+        [NoScaleOffset]_Ambient_Occlusion("Ambient Occlusion", 2D) = "white" {}
         [HideInInspector]_QueueOffset("_QueueOffset", Float) = 0
         [HideInInspector]_QueueControl("_QueueControl", Float) = -1
         [HideInInspector][NoScaleOffset]unity_Lightmaps("unity_Lightmaps", 2DArray) = "" {}
@@ -218,16 +225,31 @@ Shader "URPToon/URPToonShader"
         CBUFFER_START(UnityPerMaterial)
         float _Lighting_cutoff;
         float _Shadow_Intensity;
-        float4 _Main_Texture_TexelSize;
+        float4 _Albedo_TexelSize;
         float4 _Color;
+        float4 _Normal_TexelSize;
+        float _Metallic;
+        float _Smoothness;
+        float4 _Emission_Color;
+        float4 _Specular_TexelSize;
+        float4 _Ambient_Occlusion_TexelSize;
+        float4 _Emission_TexelSize;
         UNITY_TEXTURE_STREAMING_DEBUG_VARS;
         CBUFFER_END
         
         
         // Object and Global properties
         SAMPLER(SamplerState_Linear_Repeat);
-        TEXTURE2D(_Main_Texture);
-        SAMPLER(sampler_Main_Texture);
+        TEXTURE2D(_Albedo);
+        SAMPLER(sampler_Albedo);
+        TEXTURE2D(_Normal);
+        SAMPLER(sampler_Normal);
+        TEXTURE2D(_Specular);
+        SAMPLER(sampler_Specular);
+        TEXTURE2D(_Ambient_Occlusion);
+        SAMPLER(sampler_Ambient_Occlusion);
+        TEXTURE2D(_Emission);
+        SAMPLER(sampler_Emission);
         
         // Graph Includes
         // GraphIncludes: <None>
@@ -318,8 +340,9 @@ Shader "URPToon/URPToonShader"
         {
             SurfaceDescription surface = (SurfaceDescription)0;
             float4 _Property_5959f5f84cc64fdaaafe2cbc109d54f3_Out_0_Vector4 = _Color;
-            UnityTexture2D _Property_4f38b84c038e46fb808f32107dfffe49_Out_0_Texture2D = UnityBuildTexture2DStructNoScale(_Main_Texture);
-            float4 _SampleTexture2D_7152641a729442c4ac9a8fe855b138cc_RGBA_0_Vector4 = SAMPLE_TEXTURE2D(_Property_4f38b84c038e46fb808f32107dfffe49_Out_0_Texture2D.tex, _Property_4f38b84c038e46fb808f32107dfffe49_Out_0_Texture2D.samplerstate, _Property_4f38b84c038e46fb808f32107dfffe49_Out_0_Texture2D.GetTransformedUV(IN.uv0.xy) );
+            UnityTexture2D _Property_4f38b84c038e46fb808f32107dfffe49_Out_0_Texture2D = UnityBuildTexture2DStructNoScale(_Albedo);
+            float4 _UV_b5d197dc183049cc8998bfab212509de_Out_0_Vector4 = IN.uv0;
+            float4 _SampleTexture2D_7152641a729442c4ac9a8fe855b138cc_RGBA_0_Vector4 = SAMPLE_TEXTURE2D(_Property_4f38b84c038e46fb808f32107dfffe49_Out_0_Texture2D.tex, _Property_4f38b84c038e46fb808f32107dfffe49_Out_0_Texture2D.samplerstate, _Property_4f38b84c038e46fb808f32107dfffe49_Out_0_Texture2D.GetTransformedUV((_UV_b5d197dc183049cc8998bfab212509de_Out_0_Vector4.xy)) );
             float _SampleTexture2D_7152641a729442c4ac9a8fe855b138cc_R_4_Float = _SampleTexture2D_7152641a729442c4ac9a8fe855b138cc_RGBA_0_Vector4.r;
             float _SampleTexture2D_7152641a729442c4ac9a8fe855b138cc_G_5_Float = _SampleTexture2D_7152641a729442c4ac9a8fe855b138cc_RGBA_0_Vector4.g;
             float _SampleTexture2D_7152641a729442c4ac9a8fe855b138cc_B_6_Float = _SampleTexture2D_7152641a729442c4ac9a8fe855b138cc_RGBA_0_Vector4.b;
@@ -587,16 +610,31 @@ Shader "URPToon/URPToonShader"
         CBUFFER_START(UnityPerMaterial)
         float _Lighting_cutoff;
         float _Shadow_Intensity;
-        float4 _Main_Texture_TexelSize;
+        float4 _Albedo_TexelSize;
         float4 _Color;
+        float4 _Normal_TexelSize;
+        float _Metallic;
+        float _Smoothness;
+        float4 _Emission_Color;
+        float4 _Specular_TexelSize;
+        float4 _Ambient_Occlusion_TexelSize;
+        float4 _Emission_TexelSize;
         UNITY_TEXTURE_STREAMING_DEBUG_VARS;
         CBUFFER_END
         
         
         // Object and Global properties
         SAMPLER(SamplerState_Linear_Repeat);
-        TEXTURE2D(_Main_Texture);
-        SAMPLER(sampler_Main_Texture);
+        TEXTURE2D(_Albedo);
+        SAMPLER(sampler_Albedo);
+        TEXTURE2D(_Normal);
+        SAMPLER(sampler_Normal);
+        TEXTURE2D(_Specular);
+        SAMPLER(sampler_Specular);
+        TEXTURE2D(_Ambient_Occlusion);
+        SAMPLER(sampler_Ambient_Occlusion);
+        TEXTURE2D(_Emission);
+        SAMPLER(sampler_Emission);
         
         // Graph Includes
         // GraphIncludes: <None>
@@ -886,16 +924,31 @@ Shader "URPToon/URPToonShader"
         CBUFFER_START(UnityPerMaterial)
         float _Lighting_cutoff;
         float _Shadow_Intensity;
-        float4 _Main_Texture_TexelSize;
+        float4 _Albedo_TexelSize;
         float4 _Color;
+        float4 _Normal_TexelSize;
+        float _Metallic;
+        float _Smoothness;
+        float4 _Emission_Color;
+        float4 _Specular_TexelSize;
+        float4 _Ambient_Occlusion_TexelSize;
+        float4 _Emission_TexelSize;
         UNITY_TEXTURE_STREAMING_DEBUG_VARS;
         CBUFFER_END
         
         
         // Object and Global properties
         SAMPLER(SamplerState_Linear_Repeat);
-        TEXTURE2D(_Main_Texture);
-        SAMPLER(sampler_Main_Texture);
+        TEXTURE2D(_Albedo);
+        SAMPLER(sampler_Albedo);
+        TEXTURE2D(_Normal);
+        SAMPLER(sampler_Normal);
+        TEXTURE2D(_Specular);
+        SAMPLER(sampler_Specular);
+        TEXTURE2D(_Ambient_Occlusion);
+        SAMPLER(sampler_Ambient_Occlusion);
+        TEXTURE2D(_Emission);
+        SAMPLER(sampler_Emission);
         
         // Graph Includes
         // GraphIncludes: <None>
@@ -1191,16 +1244,31 @@ Shader "URPToon/URPToonShader"
         CBUFFER_START(UnityPerMaterial)
         float _Lighting_cutoff;
         float _Shadow_Intensity;
-        float4 _Main_Texture_TexelSize;
+        float4 _Albedo_TexelSize;
         float4 _Color;
+        float4 _Normal_TexelSize;
+        float _Metallic;
+        float _Smoothness;
+        float4 _Emission_Color;
+        float4 _Specular_TexelSize;
+        float4 _Ambient_Occlusion_TexelSize;
+        float4 _Emission_TexelSize;
         UNITY_TEXTURE_STREAMING_DEBUG_VARS;
         CBUFFER_END
         
         
         // Object and Global properties
         SAMPLER(SamplerState_Linear_Repeat);
-        TEXTURE2D(_Main_Texture);
-        SAMPLER(sampler_Main_Texture);
+        TEXTURE2D(_Albedo);
+        SAMPLER(sampler_Albedo);
+        TEXTURE2D(_Normal);
+        SAMPLER(sampler_Normal);
+        TEXTURE2D(_Specular);
+        SAMPLER(sampler_Specular);
+        TEXTURE2D(_Ambient_Occlusion);
+        SAMPLER(sampler_Ambient_Occlusion);
+        TEXTURE2D(_Emission);
+        SAMPLER(sampler_Emission);
         
         // Graph Includes
         // GraphIncludes: <None>
@@ -1502,16 +1570,31 @@ Shader "URPToon/URPToonShader"
         CBUFFER_START(UnityPerMaterial)
         float _Lighting_cutoff;
         float _Shadow_Intensity;
-        float4 _Main_Texture_TexelSize;
+        float4 _Albedo_TexelSize;
         float4 _Color;
+        float4 _Normal_TexelSize;
+        float _Metallic;
+        float _Smoothness;
+        float4 _Emission_Color;
+        float4 _Specular_TexelSize;
+        float4 _Ambient_Occlusion_TexelSize;
+        float4 _Emission_TexelSize;
         UNITY_TEXTURE_STREAMING_DEBUG_VARS;
         CBUFFER_END
         
         
         // Object and Global properties
         SAMPLER(SamplerState_Linear_Repeat);
-        TEXTURE2D(_Main_Texture);
-        SAMPLER(sampler_Main_Texture);
+        TEXTURE2D(_Albedo);
+        SAMPLER(sampler_Albedo);
+        TEXTURE2D(_Normal);
+        SAMPLER(sampler_Normal);
+        TEXTURE2D(_Specular);
+        SAMPLER(sampler_Specular);
+        TEXTURE2D(_Ambient_Occlusion);
+        SAMPLER(sampler_Ambient_Occlusion);
+        TEXTURE2D(_Emission);
+        SAMPLER(sampler_Emission);
         
         // Graph Includes
         // GraphIncludes: <None>
@@ -1856,16 +1939,31 @@ Shader "URPToon/URPToonShader"
         CBUFFER_START(UnityPerMaterial)
         float _Lighting_cutoff;
         float _Shadow_Intensity;
-        float4 _Main_Texture_TexelSize;
+        float4 _Albedo_TexelSize;
         float4 _Color;
+        float4 _Normal_TexelSize;
+        float _Metallic;
+        float _Smoothness;
+        float4 _Emission_Color;
+        float4 _Specular_TexelSize;
+        float4 _Ambient_Occlusion_TexelSize;
+        float4 _Emission_TexelSize;
         UNITY_TEXTURE_STREAMING_DEBUG_VARS;
         CBUFFER_END
         
         
         // Object and Global properties
         SAMPLER(SamplerState_Linear_Repeat);
-        TEXTURE2D(_Main_Texture);
-        SAMPLER(sampler_Main_Texture);
+        TEXTURE2D(_Albedo);
+        SAMPLER(sampler_Albedo);
+        TEXTURE2D(_Normal);
+        SAMPLER(sampler_Normal);
+        TEXTURE2D(_Specular);
+        SAMPLER(sampler_Specular);
+        TEXTURE2D(_Ambient_Occlusion);
+        SAMPLER(sampler_Ambient_Occlusion);
+        TEXTURE2D(_Emission);
+        SAMPLER(sampler_Emission);
         
         // Graph Includes
         // GraphIncludes: <None>
@@ -1956,8 +2054,9 @@ Shader "URPToon/URPToonShader"
         {
             SurfaceDescription surface = (SurfaceDescription)0;
             float4 _Property_5959f5f84cc64fdaaafe2cbc109d54f3_Out_0_Vector4 = _Color;
-            UnityTexture2D _Property_4f38b84c038e46fb808f32107dfffe49_Out_0_Texture2D = UnityBuildTexture2DStructNoScale(_Main_Texture);
-            float4 _SampleTexture2D_7152641a729442c4ac9a8fe855b138cc_RGBA_0_Vector4 = SAMPLE_TEXTURE2D(_Property_4f38b84c038e46fb808f32107dfffe49_Out_0_Texture2D.tex, _Property_4f38b84c038e46fb808f32107dfffe49_Out_0_Texture2D.samplerstate, _Property_4f38b84c038e46fb808f32107dfffe49_Out_0_Texture2D.GetTransformedUV(IN.uv0.xy) );
+            UnityTexture2D _Property_4f38b84c038e46fb808f32107dfffe49_Out_0_Texture2D = UnityBuildTexture2DStructNoScale(_Albedo);
+            float4 _UV_b5d197dc183049cc8998bfab212509de_Out_0_Vector4 = IN.uv0;
+            float4 _SampleTexture2D_7152641a729442c4ac9a8fe855b138cc_RGBA_0_Vector4 = SAMPLE_TEXTURE2D(_Property_4f38b84c038e46fb808f32107dfffe49_Out_0_Texture2D.tex, _Property_4f38b84c038e46fb808f32107dfffe49_Out_0_Texture2D.samplerstate, _Property_4f38b84c038e46fb808f32107dfffe49_Out_0_Texture2D.GetTransformedUV((_UV_b5d197dc183049cc8998bfab212509de_Out_0_Vector4.xy)) );
             float _SampleTexture2D_7152641a729442c4ac9a8fe855b138cc_R_4_Float = _SampleTexture2D_7152641a729442c4ac9a8fe855b138cc_RGBA_0_Vector4.r;
             float _SampleTexture2D_7152641a729442c4ac9a8fe855b138cc_G_5_Float = _SampleTexture2D_7152641a729442c4ac9a8fe855b138cc_RGBA_0_Vector4.g;
             float _SampleTexture2D_7152641a729442c4ac9a8fe855b138cc_B_6_Float = _SampleTexture2D_7152641a729442c4ac9a8fe855b138cc_RGBA_0_Vector4.b;
@@ -2223,16 +2322,31 @@ Shader "URPToon/URPToonShader"
         CBUFFER_START(UnityPerMaterial)
         float _Lighting_cutoff;
         float _Shadow_Intensity;
-        float4 _Main_Texture_TexelSize;
+        float4 _Albedo_TexelSize;
         float4 _Color;
+        float4 _Normal_TexelSize;
+        float _Metallic;
+        float _Smoothness;
+        float4 _Emission_Color;
+        float4 _Specular_TexelSize;
+        float4 _Ambient_Occlusion_TexelSize;
+        float4 _Emission_TexelSize;
         UNITY_TEXTURE_STREAMING_DEBUG_VARS;
         CBUFFER_END
         
         
         // Object and Global properties
         SAMPLER(SamplerState_Linear_Repeat);
-        TEXTURE2D(_Main_Texture);
-        SAMPLER(sampler_Main_Texture);
+        TEXTURE2D(_Albedo);
+        SAMPLER(sampler_Albedo);
+        TEXTURE2D(_Normal);
+        SAMPLER(sampler_Normal);
+        TEXTURE2D(_Specular);
+        SAMPLER(sampler_Specular);
+        TEXTURE2D(_Ambient_Occlusion);
+        SAMPLER(sampler_Ambient_Occlusion);
+        TEXTURE2D(_Emission);
+        SAMPLER(sampler_Emission);
         
         // Graph Includes
         // GraphIncludes: <None>
@@ -2541,16 +2655,31 @@ Shader "URPToon/URPToonShader"
         CBUFFER_START(UnityPerMaterial)
         float _Lighting_cutoff;
         float _Shadow_Intensity;
-        float4 _Main_Texture_TexelSize;
+        float4 _Albedo_TexelSize;
         float4 _Color;
+        float4 _Normal_TexelSize;
+        float _Metallic;
+        float _Smoothness;
+        float4 _Emission_Color;
+        float4 _Specular_TexelSize;
+        float4 _Ambient_Occlusion_TexelSize;
+        float4 _Emission_TexelSize;
         UNITY_TEXTURE_STREAMING_DEBUG_VARS;
         CBUFFER_END
         
         
         // Object and Global properties
         SAMPLER(SamplerState_Linear_Repeat);
-        TEXTURE2D(_Main_Texture);
-        SAMPLER(sampler_Main_Texture);
+        TEXTURE2D(_Albedo);
+        SAMPLER(sampler_Albedo);
+        TEXTURE2D(_Normal);
+        SAMPLER(sampler_Normal);
+        TEXTURE2D(_Specular);
+        SAMPLER(sampler_Specular);
+        TEXTURE2D(_Ambient_Occlusion);
+        SAMPLER(sampler_Ambient_Occlusion);
+        TEXTURE2D(_Emission);
+        SAMPLER(sampler_Emission);
         
         // Graph Includes
         // GraphIncludes: <None>
@@ -2641,8 +2770,9 @@ Shader "URPToon/URPToonShader"
         {
             SurfaceDescription surface = (SurfaceDescription)0;
             float4 _Property_5959f5f84cc64fdaaafe2cbc109d54f3_Out_0_Vector4 = _Color;
-            UnityTexture2D _Property_4f38b84c038e46fb808f32107dfffe49_Out_0_Texture2D = UnityBuildTexture2DStructNoScale(_Main_Texture);
-            float4 _SampleTexture2D_7152641a729442c4ac9a8fe855b138cc_RGBA_0_Vector4 = SAMPLE_TEXTURE2D(_Property_4f38b84c038e46fb808f32107dfffe49_Out_0_Texture2D.tex, _Property_4f38b84c038e46fb808f32107dfffe49_Out_0_Texture2D.samplerstate, _Property_4f38b84c038e46fb808f32107dfffe49_Out_0_Texture2D.GetTransformedUV(IN.uv0.xy) );
+            UnityTexture2D _Property_4f38b84c038e46fb808f32107dfffe49_Out_0_Texture2D = UnityBuildTexture2DStructNoScale(_Albedo);
+            float4 _UV_b5d197dc183049cc8998bfab212509de_Out_0_Vector4 = IN.uv0;
+            float4 _SampleTexture2D_7152641a729442c4ac9a8fe855b138cc_RGBA_0_Vector4 = SAMPLE_TEXTURE2D(_Property_4f38b84c038e46fb808f32107dfffe49_Out_0_Texture2D.tex, _Property_4f38b84c038e46fb808f32107dfffe49_Out_0_Texture2D.samplerstate, _Property_4f38b84c038e46fb808f32107dfffe49_Out_0_Texture2D.GetTransformedUV((_UV_b5d197dc183049cc8998bfab212509de_Out_0_Vector4.xy)) );
             float _SampleTexture2D_7152641a729442c4ac9a8fe855b138cc_R_4_Float = _SampleTexture2D_7152641a729442c4ac9a8fe855b138cc_RGBA_0_Vector4.r;
             float _SampleTexture2D_7152641a729442c4ac9a8fe855b138cc_G_5_Float = _SampleTexture2D_7152641a729442c4ac9a8fe855b138cc_RGBA_0_Vector4.g;
             float _SampleTexture2D_7152641a729442c4ac9a8fe855b138cc_B_6_Float = _SampleTexture2D_7152641a729442c4ac9a8fe855b138cc_RGBA_0_Vector4.b;
