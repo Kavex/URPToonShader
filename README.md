@@ -5,7 +5,7 @@ Do-To List:
 
 Add Glitter Effect (I need glitter!!)
 
-![image](https://github.com/user-attachments/assets/bcd22d65-19ea-429d-8274-a9f399338ad7)
+![image](https://github.com/user-attachments/assets/8c52d953-9192-458c-9e0c-32410d8521ee)
 
 ![image](https://github.com/user-attachments/assets/6908f721-fbcf-4477-ac8d-e33312a60853)
 
